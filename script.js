@@ -15,8 +15,6 @@ if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
         const {latitude} = position.coords;
         const {longitude} = position.coords;
-        console.log(latitude);
-        console.log(longitude);
 
         const coords = [latitude, longitude]
 
@@ -26,10 +24,24 @@ if (navigator.geolocation) {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        L.marker( coords).addTo(map)
-            .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-            .openPopup();
-    }, function () {
-        alert('Не удается получить ваше местоположение 😢');
-    });
+        map.on('click', function (mapEvent) {
+            console.log(mapEvent);
+            const {lat, lng} = mapEvent.latlng;
+
+            L.marker([lat, lng]).addTo(map)
+                .bindPopup(L.popup({
+                    maxWidth: 250,
+                    minWidth: 100,
+                    autoClose: false,
+                    closeOnClick: false,
+                    className: 'running-popup'
+                }))
+                .setPopupContent('Тренировка')
+                .openPopup();
+        }, function () {
+            alert('Не удается получить ваше местоположение 😢');
+        });
+        })
+
+
 }
